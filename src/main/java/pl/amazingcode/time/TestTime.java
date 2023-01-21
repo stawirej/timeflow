@@ -1,5 +1,6 @@
 package pl.amazingcode.time;
 
+import static java.lang.Thread.sleep;
 import static pl.amazingcode.time.Preconditions.checkArgument;
 
 import java.time.Clock;
@@ -40,12 +41,14 @@ public final class TestTime extends Time {
     }
 
     public synchronized void fastForward(Duration duration) {
-        instance().setClock(Clock.offset(instance().clock(), duration));
+        var updatedClock = Clock.offset(instance().clock(), duration);
+        instance().setClock(updatedClock);
         notifyObservers();
     }
 
     public synchronized void fastBackward(Duration duration) {
-        instance().setClock(Clock.offset(instance().clock(), duration.negated()));
+        var updatedClock = Clock.offset(instance().clock(), duration.negated());
+        instance().setClock(updatedClock);
         notifyObservers();
     }
 
@@ -59,7 +62,7 @@ public final class TestTime extends Time {
 
         try {
             while (instance().now().isBefore(endTime)) {
-                Thread.sleep(flowSpeedMillis);
+                sleep(flowSpeedMillis);
                 fastForward(step);
             }
         } catch (InterruptedException e) {
@@ -71,11 +74,11 @@ public final class TestTime extends Time {
         observers.add(clockConsumer);
     }
 
-    private void notifyObservers() {
-        observers.forEach(observer -> observer.accept(instance().clock()));
-    }
-
     public synchronized void clearObservers() {
         observers.clear();
+    }
+
+    private void notifyObservers() {
+        observers.forEach(observer -> observer.accept(instance().clock()));
     }
 }

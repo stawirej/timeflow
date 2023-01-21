@@ -31,8 +31,6 @@ class SomeService {
 - No need to pass `Clock` as a dependency in production code anymore to make it testable.
 
 ```java
-import java.time.Instant;
-
 class SomeService {
 
     void doSomething() {

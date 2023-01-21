@@ -44,7 +44,7 @@ class SomeService {
 ## Requirements
 
 - Java 17
-- _If you need to use in other LTS java version, please create an [issue](https://github.com/stawirej/time/issues).
+- _If you need to use in other LTS java version, please create an [issue](https://github.com/stawirej/time/issues)._
 
 ## Dependencies
 

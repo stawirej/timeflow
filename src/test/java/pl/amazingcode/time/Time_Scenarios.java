@@ -152,7 +152,7 @@ final class Time_Scenarios {
     }
 
     @Test
-    void Test_usage() {
+    void TestTime_not_used_in_production_code() {
 
         noClasses()
             .should()

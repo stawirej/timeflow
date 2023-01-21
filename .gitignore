@@ -1,0 +1,19 @@
+# Compiled class file
+*.class
+
+# Log file
+*.log
+
+# IntelliJ
+*.iml
+*.idea
+pom.xml.versionsBackup
+
+# Target
+target
+
+
+# Other
+.DS_Store
+*.pdf
+*.html

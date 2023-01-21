@@ -19,7 +19,9 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.TimeZone;
+import java.util.function.Consumer;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 final class Time_Scenarios {
@@ -157,6 +159,45 @@ final class Time_Scenarios {
             .dependOnClassesThat()
             .haveFullyQualifiedName("pl.amazingcode.time.TestTime")
             .check(classes);
+    }
+
+    @Test
+    void Observe_test_clock() {
+        // Given
+        TestTime.testInstance().setClock(FIXED_CLOCK);
+        var step = Duration.of(1, ChronoUnit.MINUTES);
+        var endTime = Time.instance().now().plus(10, ChronoUnit.MINUTES);
+        var flowSpeedMillis = 10;
+
+        var timeChanges = new ArrayList<>();
+        Consumer<Clock> clockConsumer = (clock) -> timeChanges.add(clock.instant().toString());
+
+        // When
+        TestTime.testInstance().registerObserver(clockConsumer);
+
+        // Then
+        TestTime.testInstance().timeFlow(step, endTime, flowSpeedMillis);
+        then(timeChanges).hasSize(10);
+    }
+
+    @Test
+    void Clear_observers() {
+        // Given
+        TestTime.testInstance().setClock(FIXED_CLOCK);
+        var step = Duration.of(1, ChronoUnit.MINUTES);
+        var endTime = Time.instance().now().plus(10, ChronoUnit.MINUTES);
+        var flowSpeedMillis = 10;
+
+        var timeChanges = new ArrayList<>();
+        Consumer<Clock> clockConsumer = (clock) -> timeChanges.add(clock.instant().toString());
+        TestTime.testInstance().registerObserver(clockConsumer);
+
+        // When
+        TestTime.testInstance().clearObservers();
+
+        // Then
+        TestTime.testInstance().timeFlow(step, endTime, flowSpeedMillis);
+        then(timeChanges).hasSize(0);
     }
 
     @Nested

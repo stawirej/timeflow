@@ -54,6 +54,17 @@ class SomeService {
 }
 ```
 
+and just [alter time in tests](#in-tests) using
+
+```java
+TestTime.testInstance().setClock(FIXED_CLOCK);
+// or
+TestTime.testInstance().fastForward(duration);
+// or
+TestTime.testInstance().timeFlow(step, endTime, flowSpeedMillis);
+```
+
+
 ## Requirements
 
 - Java 17+

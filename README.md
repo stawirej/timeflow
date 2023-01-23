@@ -3,7 +3,7 @@
 - Provides java clock which can be used in production code and easily adjusted/changed in tests.
 - No passing java `Clock` as a dependency or using mocking libraries is required to test time dependent code.
 
-### Without `time` library
+### Without `timeflow` library
 
 - Passing `Clock` as a dependency in production code to make it testable.
 - Sometimes it may require to alter a lot of design to pass `Clock` as a dependency in production code.
@@ -26,7 +26,7 @@ class SomeService {
 }
 ```
 
-### With `time` library
+### With `timeflow` library
 
 - No need to pass `Clock` as a dependency in production code anymore to make it testable.
 
@@ -68,7 +68,7 @@ TestTime.testInstance().timeFlow(step, endTime, flowSpeedMillis);
 ## Requirements
 
 - Java 17+
-- _If you need to use in lower LTS java version, please create an [issue](https://github.com/stawirej/time/issues)._
+- _If you need to use in lower LTS java version, please create an [issue](https://github.com/stawirej/timeflow/issues)._
 
 ## Dependencies
 
@@ -81,15 +81,15 @@ TestTime.testInstance().timeFlow(step, endTime, flowSpeedMillis);
 
 <dependency>
     <groupId>pl.amazingcode</groupId>
-    <artifactId>time</artifactId>
-    <version>1.0.0</version>
+    <artifactId>timeflow</artifactId>
+    <version>1.1.0</version>
 </dependency>
 ```
 
 ### Gradle
 
 ```groovy
-implementation group: 'pl.amazingcode', name: 'time', version: "1.0.0"
+implementation group: 'pl.amazingcode', name: 'timeflow', version: "1.1.0"
 ```
 
 ## Usage

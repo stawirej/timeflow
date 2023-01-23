@@ -63,6 +63,25 @@ final class Time_Scenarios {
     }
 
     @Test
+    void Test_time_the_same_as_production_time() {
+        // Given
+        TestTime.testInstance().setClock(FIXED_CLOCK);
+
+        // Then
+        then(Time.instance().now()).isEqualTo(TestTime.testInstance().now());
+    }
+
+    @Test
+    void Test_clock_the_same_as_production_clock(){
+        // Given
+        TestTime.testInstance().setClock(FIXED_CLOCK);
+
+        // Then
+        then(Time.instance().clock()).isEqualTo(TestTime.testInstance().clock());
+        then(Time.instance().clock().instant()).isEqualTo(TestTime.testInstance().clock().instant());
+    }
+
+    @Test
     void Use_custom_clock() {
         // Given
         TestTime.testInstance().setClock(FIXED_CLOCK);

@@ -26,6 +26,17 @@ public final class TestTime extends Time {
         return TEST_INSTANCE;
     }
 
+    @Override
+    public Instant now() {
+        return instance().now();
+    }
+
+    @Override
+    public Clock clock() {
+        return instance().clock();
+    }
+
+    @Override
     public synchronized void setClock(Clock clock) {
         if (originalClock == null) {
             originalClock = clock();

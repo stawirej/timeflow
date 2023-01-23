@@ -8,7 +8,7 @@
 - Passing `Clock` as a dependency in production code to make it testable.
 - Sometimes it may require to alter a lot of design to pass `Clock` as a dependency in production code.
 - In Spring Boot tests we can't inject during one test different fixed `Clock`.
-- Using [Mockito](https://site.mockito.org/) - e.g. mocking Instant.now() not working outside test scope.
+- Using [Mockito](https://site.mockito.org/) - e.g. mocking Instant.now() not working outside of the test scope.
 
 ```java
 class SomeService {
@@ -34,6 +34,19 @@ class SomeService {
 class SomeService {
 
     void doSomething() {
+        var now = Time.instance().now();
+        // do something
+    }
+
+}
+```
+
+- or if you need to use `Clock` in production code:
+
+```java
+class SomeService {
+
+    void doSomething() {
         var now = Instant.now(Time.instance().clock());
         // do something
     }
@@ -43,8 +56,8 @@ class SomeService {
 
 ## Requirements
 
-- Java 17
-- _If you need to use in other LTS java version, please create an [issue](https://github.com/stawirej/time/issues)._
+- Java 17+
+- _If you need to use in lower LTS java version, please create an [issue](https://github.com/stawirej/time/issues)._
 
 ## Dependencies
 
@@ -69,7 +82,7 @@ repositories {
 <dependency>
     <groupId>pl.amazingcode</groupId>
     <artifactId>time</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.1.1-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -149,10 +162,10 @@ final class Time_Scenarios {
 TestTime.testInstance().registerObserver(clock->System.out.println(clock.instant().toString()));
 ```
 
-#### Ensure `TestTime` class is not used in production code
+#### Ensure only `time` library is used in production code
 
 - Add dependency for [ArchUnit](https://www.archunit.org/)
-- Detect usage of `TestTime` class in production code by writing test:
+- Detect usage of `TestTime`, `Clock`, and `now()` method from `Instant`, `LocalDateTime`, `LocalDate`, `LocalTime` in production code by writing tests:
 
 ```java
 ...
@@ -164,11 +177,45 @@ private final JavaClasses classes=new ClassFileImporter()
 ...
 
 @Test
-void TestTime_not_used_in_production_code(){
-    noClasses()
-    .should()
-    .dependOnClassesThat()
-    .haveFullyQualifiedName("pl.amazingcode.time.TestTime")
-    .check(classes);
+void TestTime_not_used_in_production_code() {
+  noClasses()
+  .should()
+  .dependOnClassesThat()
+  .haveFullyQualifiedName("pl.amazingcode.time.TestTime")
+  .check(classes);
+}
+
+@Test
+void Clock_not_used_in_production_code() {
+  noClasses()
+  .should()
+  .dependOnClassesThat()
+  .haveFullyQualifiedName("java.time.Clock")
+  .check(classes);
+}
+
+@Test
+void Instant_now_not_used_in_production_code() {
+  noClasses()
+  .that()
+  .doNotHaveFullyQualifiedName(PublicEvent.class.getName())
+.should()
+.callMethod(Instant.class.getName(), "now")
+.check(classes);
+}
+
+@Test
+void LocalDateTime_now_not_used_in_production_code() {
+  noClasses().should().callMethod(LocalDateTime.class.getName(), "now").check(classes);
+}
+
+@Test
+void LocalDate_now_not_used_in_production_code() {
+  noClasses().should().callMethod(LocalDate.class.getName(), "now").check(classes);
+}
+
+@Test
+void LocalTime_now_not_used_in_production_code() {
+  noClasses().should().callMethod(LocalTime.class.getName(), "now").check(classes);
 }
 ```

@@ -168,54 +168,54 @@ TestTime.testInstance().registerObserver(clock->System.out.println(clock.instant
 - Detect usage of `TestTime`, `Clock`, and `now()` method from `Instant`, `LocalDateTime`, `LocalDate`, `LocalTime` in production code by writing tests:
 
 ```java
-...
-private static final String ROOT_PACKAGE="YOUR_APP_ROOT_PACKAGE";
+final class TimeTest {
 
-private final JavaClasses classes=new ClassFileImporter()
-    .withImportOption(new ImportOption.DoNotIncludeTests())
-    .importPackages(ROOT_PACKAGE);
-...
+    private static final String ROOT_PACKAGE = "YOUR_APP_ROOT_PACKAGE";
 
-@Test
-void TestTime_not_used_in_production_code() {
-  noClasses()
-  .should()
-  .dependOnClassesThat()
-  .haveFullyQualifiedName("pl.amazingcode.time.TestTime")
-  .check(classes);
-}
+    private final JavaClasses classes = new ClassFileImporter()
+        .withImportOption(new ImportOption.DoNotIncludeTests())
+        .importPackages(ROOT_PACKAGE);
 
-@Test
-void Clock_not_used_in_production_code() {
-  noClasses()
-  .should()
-  .dependOnClassesThat()
-  .haveFullyQualifiedName("java.time.Clock")
-  .check(classes);
-}
+    @Test
+    void TestTime_not_used_in_production_code() {
+        noClasses()
+            .should()
+            .dependOnClassesThat()
+            .haveFullyQualifiedName("pl.amazingcode.time.TestTime")
+            .check(classes);
+    }
 
-@Test
-void Instant_now_not_used_in_production_code() {
-  noClasses()
-  .that()
-  .doNotHaveFullyQualifiedName(PublicEvent.class.getName())
-  .should()
-  .callMethod(Instant.class.getName(), "now")
-  .check(classes);
-}
+    @Test
+    void Clock_not_used_in_production_code() {
+        noClasses()
+            .should()
+            .dependOnClassesThat()
+            .haveFullyQualifiedName("java.time.Clock")
+            .check(classes);
+    }
 
-@Test
-void LocalDateTime_now_not_used_in_production_code() {
-  noClasses().should().callMethod(LocalDateTime.class.getName(), "now").check(classes);
-}
+    @Test
+    void Instant_now_not_used_in_production_code() {
+        noClasses()
+            .that()
+            .should()
+            .callMethod(Instant.class.getName(), "now")
+            .check(classes);
+    }
 
-@Test
-void LocalDate_now_not_used_in_production_code() {
-  noClasses().should().callMethod(LocalDate.class.getName(), "now").check(classes);
-}
+    @Test
+    void LocalDateTime_now_not_used_in_production_code() {
+        noClasses().should().callMethod(LocalDateTime.class.getName(), "now").check(classes);
+    }
 
-@Test
-void LocalTime_now_not_used_in_production_code() {
-  noClasses().should().callMethod(LocalTime.class.getName(), "now").check(classes);
+    @Test
+    void LocalDate_now_not_used_in_production_code() {
+        noClasses().should().callMethod(LocalDate.class.getName(), "now").check(classes);
+    }
+
+    @Test
+    void LocalTime_now_not_used_in_production_code() {
+        noClasses().should().callMethod(LocalTime.class.getName(), "now").check(classes);
+    }
 }
 ```

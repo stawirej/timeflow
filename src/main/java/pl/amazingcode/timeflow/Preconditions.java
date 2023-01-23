@@ -1,4 +1,4 @@
-package pl.amazingcode.time;
+package pl.amazingcode.timeflow;
 
 final class Preconditions {
 

@@ -1,4 +1,4 @@
-package pl.amazingcode.time;
+package pl.amazingcode.timeflow;
 
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
 import static org.assertj.core.api.Assertions.catchThrowable;
@@ -176,7 +176,7 @@ final class Time_Scenarios {
         noClasses()
             .should()
             .dependOnClassesThat()
-            .haveFullyQualifiedName("pl.amazingcode.time.TestTime")
+            .haveFullyQualifiedName("pl.amazingcode.timeflow.TestTime")
             .check(classes);
     }
 

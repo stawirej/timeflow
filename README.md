@@ -181,7 +181,7 @@ final class TimeTest {
         noClasses()
             .should()
             .dependOnClassesThat()
-            .haveFullyQualifiedName("pl.amazingcode.time.TestTime")
+            .haveFullyQualifiedName("pl.amazingcode.timeflow.TestTime")
             .check(classes);
     }
 

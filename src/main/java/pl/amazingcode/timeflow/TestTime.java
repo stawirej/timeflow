@@ -1,7 +1,6 @@
-package pl.amazingcode.time;
+package pl.amazingcode.timeflow;
 
 import static java.lang.Thread.sleep;
-import static pl.amazingcode.time.Preconditions.checkArgument;
 
 import java.time.Clock;
 import java.time.Duration;
@@ -68,8 +67,8 @@ public final class TestTime extends Time {
         Instant endTime,
         int flowSpeedMillis) {
 
-        checkArgument(flowSpeedMillis > 0, "Flow speed must be positive");
-        checkArgument(endTime.isAfter(instance().now()), "End time must be after current time");
+        Preconditions.checkArgument(flowSpeedMillis > 0, "Flow speed must be positive");
+        Preconditions.checkArgument(endTime.isAfter(instance().now()), "End time must be after current time");
 
         try {
             while (instance().now().isBefore(endTime)) {

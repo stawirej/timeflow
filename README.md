@@ -61,17 +61,6 @@ class SomeService {
 
 ## Dependencies
 
----
-
-- Not yet released.Snapshot version to play with: `0.0.1-SNAPSHOT`.
-- Add https://s01.oss.sonatype.org/content/repositories/snapshots/ as snapshot repository.
-- For gradle:
-
-```groovy
-repositories {
-    maven { url "https://s01.oss.sonatype.org/content/repositories/snapshots/" }
-}
-```
 
 ---
 
@@ -82,14 +71,14 @@ repositories {
 <dependency>
     <groupId>pl.amazingcode</groupId>
     <artifactId>time</artifactId>
-    <version>0.1.1-SNAPSHOT</version>
+    <version>1.0.0</version>
 </dependency>
 ```
 
 ### Gradle
 
 ```groovy
-implementation group: 'pl.amazingcode', name: 'time', version: "0.0.1-SNAPSHOT"
+implementation group: 'pl.amazingcode', name: 'time', version: "1.0.0"
 ```
 
 ## Usage
@@ -199,9 +188,9 @@ void Instant_now_not_used_in_production_code() {
   noClasses()
   .that()
   .doNotHaveFullyQualifiedName(PublicEvent.class.getName())
-.should()
-.callMethod(Instant.class.getName(), "now")
-.check(classes);
+  .should()
+  .callMethod(Instant.class.getName(), "now")
+  .check(classes);
 }
 
 @Test

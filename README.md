@@ -82,14 +82,14 @@ TestTime.testInstance().timeFlow(step, endTime, flowSpeedMillis);
 <dependency>
     <groupId>pl.amazingcode</groupId>
     <artifactId>timeflow</artifactId>
-    <version>1.1.0</version>
+    <version>1.2.0</version>
 </dependency>
 ```
 
 ### Gradle
 
 ```groovy
-implementation group: 'pl.amazingcode', name: 'timeflow', version: "1.1.0"
+implementation group: 'pl.amazingcode', name: 'timeflow', version: "1.2.0"
 ```
 
 ## Usage

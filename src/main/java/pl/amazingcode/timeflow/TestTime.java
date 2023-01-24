@@ -7,18 +7,17 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
 public final class TestTime extends Time {
 
     private static final TestTime TEST_INSTANCE = new TestTime();
     private final List<Consumer<Clock>> observers;
-    private volatile Clock originalClock;
 
     private TestTime() {
         super();
         this.observers = new ArrayList<>();
-
     }
 
     public static TestTime testInstance() {
@@ -37,17 +36,11 @@ public final class TestTime extends Time {
 
     @Override
     public synchronized void setClock(Clock clock) {
-        if (originalClock == null) {
-            originalClock = clock();
-        }
         instance().setClock(clock);
     }
 
     public synchronized void resetClock() {
-        if (originalClock != null) {
-            instance().setClock(originalClock);
-            originalClock = null;
-        }
+            instance().setClock(Clock.systemUTC());
     }
 
     public synchronized void fastForward(Duration duration) {

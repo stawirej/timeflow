@@ -9,6 +9,7 @@ import com.tngtech.archunit.core.domain.JavaClasses;
 import com.tngtech.archunit.core.importer.ClassFileImporter;
 import com.tngtech.archunit.core.importer.ImportOption;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Nested;
@@ -94,9 +95,10 @@ final class Time_Scenarios {
     }
 
     @Test
-    void Reset_to_original_clock() {
+    void Reset_clock_to_current_time() {
         // Given
         TestTime.testInstance().setClock(FIXED_CLOCK);
+        var fixedNow = Time.instance().now();
 
         // When
         TestTime.testInstance().resetClock();
@@ -104,6 +106,7 @@ final class Time_Scenarios {
         // Then
         var now = Time.instance().now();
         var instantNow = Instant.now();
+        then(fixedNow).isCloseTo(FIXED_CLOCK.instant(), within(1, ChronoUnit.MILLIS));
         then(now).isCloseTo(instantNow, within(1, ChronoUnit.MILLIS));
     }
 

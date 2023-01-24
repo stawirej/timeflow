@@ -5,26 +5,26 @@ import java.time.Instant;
 
 public sealed class Time permits TestTime {
 
-    private static final Time INSTANCE = new Time();
-    private volatile Clock clock;
+  private static final Time INSTANCE = new Time();
+  private volatile Clock clock;
 
-    protected Time() {
-        this.clock = Clock.systemUTC();
-    }
+  protected Time() {
+    this.clock = Clock.systemUTC();
+  }
 
-    public static Time instance() {
-        return INSTANCE;
-    }
+  public static Time instance() {
+    return INSTANCE;
+  }
 
-    public Clock clock() {
-        return this.clock;
-    }
+  public Clock clock() {
+    return this.clock;
+  }
 
-    public Instant now() {
-        return Instant.now(clock);
-    }
+  public Instant now() {
+    return Instant.now(clock);
+  }
 
-    protected synchronized void setClock(Clock clock) {
-        this.clock = clock;
-    }
+  protected synchronized void setClock(Clock clock) {
+    this.clock = clock;
+  }
 }

@@ -21,7 +21,7 @@ public sealed class Time permits TestTime {
   }
 
   public Instant now() {
-    return Instant.now(clock);
+    return clock.instant();
   }
 
   protected synchronized void setClock(Clock clock) {

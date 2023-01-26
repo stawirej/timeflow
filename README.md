@@ -2,12 +2,14 @@
 
 - Provides java clock which can be used in production code and easily adjusted/changed in tests.
 - No passing java `Clock` as a dependency or using mocking libraries is required to test time dependent code.
+- Have one time across the whole application.
 
 ### Without `timeflow` library
 
-- Passing `Clock` as a dependency in production code to make it testable.
-- Sometimes it may require to alter a lot of design to pass `Clock` as a dependency in production code.
-- In Spring Boot tests we can't inject during one test different fixed `Clock`.
+- Passing `Clock` as a dependency in production code to make it testable
+  - if you have good design, and you can easily pass `Clock` as a dependency and test your time dependent code - go for it!
+- Update design to pass `Clock` as a dependency (could be challenging in legacy code).
+- In Spring Boot tests we can't alter provided fixed `Clock` bean.
 - Using [Mockito](https://site.mockito.org/) - e.g. mocking Instant.now() not working outside of the test scope.
 
 ```java
@@ -34,20 +36,7 @@ class SomeService {
 class SomeService {
 
     void doSomething() {
-        var now = Time.instance().now();
-        // do something
-    }
-
-}
-```
-
-- or if you need to use `Clock` in production code:
-
-```java
-class SomeService {
-
-    void doSomething() {
-        var now = Instant.now(Time.instance().clock());
+        var now = Time.instance().now(); // or var now = Instant.now(Time.instance().clock());
         // do something
     }
 
@@ -57,7 +46,7 @@ class SomeService {
 and just [alter time in tests](#in-tests) using
 
 ```java
-TestTime.testInstance().setClock(FIXED_CLOCK);
+TestTime.testInstance().setClock(fixedClock);
 // or
 TestTime.testInstance().fastForward(duration);
 // or
@@ -108,6 +97,8 @@ Instant now = Time.instance().now();
 Clock clock = Time.instance().clock();
 ```
 
+> **_NOTE:_**  Use `timeflow` library directly in production code. Do not use e.g. as a Spring Bean.
+
 ### In tests
 
 ```java
@@ -155,6 +146,8 @@ final class Time_Scenarios {
     }
 }
 ```
+
+- More cases in [Time_Scenarios](src/test/java/pl/amazingcode/timeflow/Time_Scenarios.java) test class.
 
 #### Provide consumer to observe time changes
 

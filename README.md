@@ -57,10 +57,9 @@ TestTime.testInstance().timeFlow(step, endTime, flowSpeedMillis);
 ## Requirements
 
 - Java 17+
-- _If you need to use in lower LTS java version, please create an [issue](https://github.com/stawirej/timeflow/issues)._
+- Java 11 - use [timeflow-java11](https://github.com/stawirej/timeflow-java11)
 
 ## Dependencies
-
 
 ---
 

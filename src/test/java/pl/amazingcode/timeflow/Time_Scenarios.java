@@ -163,7 +163,7 @@ final class Time_Scenarios {
     // Given
     TestTime.testInstance().setClock(FIXED_CLOCK);
     var step = Duration.of(1, ChronoUnit.MINUTES);
-    var endTime = Time.instance().now().plus(10, ChronoUnit.MINUTES);
+    var endTime = FIXED_CLOCK.instant().plus(10, ChronoUnit.MINUTES);
     var flowSpeedMillis = 100;
     // When
     TestTime.testInstance().timeFlow(step, endTime, flowSpeedMillis);

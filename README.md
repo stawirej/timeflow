@@ -2,7 +2,7 @@
 
 - Provides java clock which can be used in production code and easily adjusted/changed in tests.
 - No passing java `Clock` as a dependency or using mocking libraries is required to test time dependent code.
-- Have one time across the whole application.
+- Have one time provider across the whole application.
 
 ### Without `timeflow` library
 

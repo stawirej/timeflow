@@ -54,10 +54,10 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.surefire.plugin.version>2.22.2</maven.surefire.plugin.version>
-        <maven.compiler.plugin.version>3.8.1</maven.compiler.plugin.version>
-        <maven.bundle.plugin.version>4.2.1</maven.bundle.plugin.version>
+        <maven.compiler.plugin.version>3.10.1</maven.compiler.plugin.version>
+        <maven.jar.plugin.version>3.3.0</maven.jar.plugin.version>
         <maven.source.plugin.version>3.2.1</maven.source.plugin.version>
-        <maven.javadoc.plugin.version>3.3.2</maven.javadoc.plugin.version>
+        <maven.javadoc.plugin.version>3.4.1</maven.javadoc.plugin.version>
         <maven.gpg.plugin.version>3.0.1</maven.gpg.plugin.version>
         <assertj.core.version>3.24.2</assertj.core.version>
         <junit.version>5.9.2</junit.version>
@@ -108,14 +108,10 @@
             </plugin>
 
             <plugin>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>maven-bundle-plugin</artifactId>
-                <extensions>true</extensions>
-                <version>${maven.bundle.plugin.version}</version>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>${maven.jar.plugin.version}</version>
                 <configuration>
-                    <instructions>
-                        <Export-Package>*</Export-Package>
-                    </instructions>
                     <archive>
                         <manifestEntries>
                             <Automatic-Module-Name>${project.groupId}.timeflow</Automatic-Module-Name>

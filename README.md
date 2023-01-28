@@ -70,14 +70,14 @@ TestTime.testInstance().timeFlow(step, endTime, flowSpeedMillis);
 <dependency>
     <groupId>pl.amazingcode</groupId>
     <artifactId>timeflow</artifactId>
-    <version>1.3.0</version>
+    <version>1.5.0</version>
 </dependency>
 ```
 
 ### Gradle
 
 ```groovy
-implementation group: 'pl.amazingcode', name: 'timeflow', version: "1.3.0"
+implementation group: 'pl.amazingcode', name: 'timeflow', version: "1.5.0"
 ```
 
 ## Usage
@@ -118,7 +118,7 @@ final class Time_Scenarios {
         TestTime.testInstance().setClock(FIXED_CLOCK);
         var duration = Duration.of(10, ChronoUnit.MINUTES);
 
-        startSomething();
+        startBackgroundSomething();
 
         // When
         TestTime.testInstance().fastForward(duration);  // jump forward 10 minutes
@@ -135,7 +135,7 @@ final class Time_Scenarios {
         var endTime = Time.instance().now().plus(10, ChronoUnit.MINUTES);
         var flowSpeedMillis = 100;
 
-        startSomething();
+        startBackgroundSomething();
 
         // When
         TestTime.testInstance().timeFlow(step, endTime, flowSpeedMillis); // simulate speed up time flow with given step 

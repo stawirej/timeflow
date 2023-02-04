@@ -136,7 +136,7 @@ final class Time_Scenarios {
         var endTime = Time.instance().now().plus(10, ChronoUnit.MINUTES);
         var flowSpeedMillis = 100;
 
-        // time dependent code under test
+        // time dependent code under test e.g. scheduled task
 
         // When
         TestTime.testInstance().timeFlow(step, endTime, flowSpeedMillis); // simulate speed up time flow with given step 
@@ -212,3 +212,84 @@ final class TimeTest {
     }
 }
 ```
+## Example
+
+### Use cases
+
+- Can't create ticket for past event
+- Ticket is expired after event
+
+### Production code
+
+```java
+final class Ticket {
+
+    private final Instant eventDateTime;
+
+    private Ticket(Instant eventDateTime) {
+        this.eventDateTime = eventDateTime;
+    }
+
+    public static Ticket create(int year, int month, int dayOfMonth, int hour, int minute, String timezone) {
+        var zoneId = ZoneId.of(timezone);
+        var eventDateTime = LocalDateTime.of(year, month, dayOfMonth, hour, minute).atZone(zoneId).toInstant();
+
+        var now = Time.instance().now();
+        if (eventDateTime.isBefore(now)) {
+            throw new IllegalArgumentException("Cannot create ticket for past event!");
+        }
+
+        return new Ticket(eventDateTime);
+    }
+
+    public boolean isExpired() {
+        var now = Time.instance().now();
+        return eventDateTime.isBefore(now);
+    }
+}
+```
+### Tests
+
+```java
+@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+final class Ticket_Scenarios {
+
+    private static final ZoneId ZONE_ID = TimeZone.getTimeZone("Europe/Warsaw").toZoneId();
+    private static final Clock FIXED_CLOCK =
+        Clock.fixed(LocalDateTime.of(2023, 10, 22, 20, 30).atZone(ZONE_ID).toInstant(), ZONE_ID);
+
+    @AfterEach
+    void afterEach() {
+        TestTime.testInstance().resetClock();   // <5>
+    }
+
+    @Test
+    void Cant_create_ticket_for_past_event() {
+        // When
+        var throwable = catchThrowable(() -> Ticket.create(2019, 1, 17, 20, 30, "Europe/Warsaw"));
+
+        // Then
+        then(throwable)
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("Cannot create ticket for past event!");
+    }
+
+    @Test
+    void Ticket_expires_after_event() {
+        // Given
+        TestTime.testInstance().setClock(FIXED_CLOCK);                      // <1>
+        var ticket = Ticket.create(2023, 10, 23, 20, 30, ZONE_ID.getId());  // <2>
+        TestTime.testInstance().fastForward(Duration.ofDays(2));            // <3>
+
+        // Then
+        then(ticket.isExpired()).isTrue();                                  // <4>
+    }
+}
+```
+
+
+1. Set current time to `2023-10-22 20:30` at given timezone.
+2. Create ticket for future event at `2023-10-23 20:30` at given timezone.
+3. Fast forward time by 2 days to `2023-10-24 20:30` at given timezone.
+4. Check ticket is expired.
+5. Reset clock after each test to default value not to affect other tests.

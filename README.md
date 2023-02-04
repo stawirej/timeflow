@@ -157,7 +157,7 @@ final class Time_Scenarios {
 TestTime.testInstance().registerObserver(clock->System.out.println(clock.instant().toString()));
 ```
 
-#### Ensure only `time` library is used in production code
+#### Ensure only `timeflow` library is used in production code
 
 - Add dependency for [ArchUnit](https://www.archunit.org/)
 - Detect usage of `TestTime`, `Clock`, and `now()` method from `Instant`, `LocalDateTime`, `LocalDate`, `LocalTime` in production code by writing tests:

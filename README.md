@@ -234,7 +234,7 @@ final class Ticket {
         var zoneId = ZoneId.of(timezone);
         var eventDateTime = LocalDateTime.of(year, month, dayOfMonth, hour, minute).atZone(zoneId).toInstant();
 
-        var now = Time.instance().now();
+        var now = Time.instance().now();    // <1>
         if (eventDateTime.isBefore(now)) {
             throw new IllegalArgumentException("Cannot create ticket for past event!");
         }
@@ -243,11 +243,15 @@ final class Ticket {
     }
 
     public boolean isExpired() {
-        var now = Time.instance().now();
+        var now = Time.instance().now();    // <2>
         return eventDateTime.isBefore(now);
     }
 }
 ```
+
+1. Use `timeflow` library to obtain current time
+2. Use `timeflow` library to obtain current time
+
 ### Tests
 
 ```java
@@ -256,7 +260,7 @@ final class Ticket_Scenarios {
 
     private static final ZoneId ZONE_ID = TimeZone.getTimeZone("Europe/Warsaw").toZoneId();
     private static final Clock FIXED_CLOCK =
-        Clock.fixed(LocalDateTime.of(2023, 10, 22, 20, 30).atZone(ZONE_ID).toInstant(), ZONE_ID);
+        Clock.fixed(LocalDateTime.of(2020, 10, 22, 20, 30).atZone(ZONE_ID).toInstant(), ZONE_ID);
 
     @AfterEach
     void afterEach() {
@@ -265,6 +269,9 @@ final class Ticket_Scenarios {
 
     @Test
     void Cant_create_ticket_for_past_event() {
+        // Given
+        TestTime.testInstance().setClock(FIXED_CLOCK);
+
         // When
         var throwable = catchThrowable(() -> Ticket.create(2019, 1, 17, 20, 30, "Europe/Warsaw"));
 
@@ -278,7 +285,7 @@ final class Ticket_Scenarios {
     void Ticket_expires_after_event() {
         // Given
         TestTime.testInstance().setClock(FIXED_CLOCK);                      // <1>
-        var ticket = Ticket.create(2023, 10, 23, 20, 30, ZONE_ID.getId());  // <2>
+        var ticket = Ticket.create(2020, 10, 23, 20, 30, ZONE_ID.getId());  // <2>
         TestTime.testInstance().fastForward(Duration.ofDays(2));            // <3>
 
         // Then
@@ -287,9 +294,8 @@ final class Ticket_Scenarios {
 }
 ```
 
-
-1. Set current time to `2023-10-22 20:30` at given timezone.
-2. Create ticket for future event at `2023-10-23 20:30` at given timezone.
-3. Fast forward time by 2 days to `2023-10-24 20:30` at given timezone.
+1. Set current time to `2020-10-22 20:30` at given timezone.
+2. Create ticket for future event at `2020-10-23 20:30` at given timezone.
+3. Fast forward time by 2 days to `2020-10-24 20:30` at given timezone.
 4. Check ticket is expired.
 5. Reset clock after each test to default value not to affect other tests.

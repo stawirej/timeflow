@@ -1,3 +1,5 @@
+![img.png](logo.png)
+
 ## About
 
 - Provides java clock which can be used in production code and easily adjusted/changed in tests.

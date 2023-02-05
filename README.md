@@ -3,36 +3,12 @@
 ## About
 
 - Provides java clock which can be used in production code and easily adjusted/changed in tests.
-- No passing java `Clock` as a dependency or using mocking libraries is required to test time dependent code.
-- Have one time provider across the whole application.
+- No passing java `Clock` as a dependency or using mocking libraries is required anymore to test time dependent code.
+- Have one consistent time provider across the whole application.
 
-### Without `timeflow` library
 
-- Passing a `Clock` as a dependency in production code to make it testable
-  - if you have good design, and you can easily pass `Clock` as a dependency and test your time dependent code - go for it!
-- Update design to pass `Clock` as a dependency (could be challenging in legacy code).
-- In Spring Boot tests we can't alter provided fixed `Clock` bean.
-- Using [Mockito](https://site.mockito.org/) - e.g. mocking Instant.now() not working outside of the test scope.
-
-```java
-class SomeService {
-
-    private final Clock clock;
-
-    SomeService(Clock clock) {
-        this.clock = clock;
-    }
-
-    void doSomething() {
-        var now = Instant.now(clock);
-        // do something
-    }
-}
-```
-
-### With `timeflow` library
-
-- No need to pass `Clock` as a dependency in production code anymore to make it testable.
+### Overview
+- Use `Time` class as a single point of time/clock access in production code.
 
 ```java
 class SomeService {
@@ -54,6 +30,32 @@ TestTime.testInstance().fastForward(duration);
 // or
 TestTime.testInstance().timeFlow(step, endTime, flowSpeedMillis);
 ```
+
+- `TestTime` class allows to alter time in tests without injecting `Clock` as a dependency.
+
+### Overcome issues of
+
+- Passing a `Clock` as a dependency in production code to make it testable
+    ```java
+    class SomeService {
+    
+        private final Clock clock;
+    
+        SomeService(Clock clock) {
+            this.clock = clock;
+        }
+    
+        void doSomething() {
+            var now = Instant.now(clock);
+            // do something
+        }
+    }
+    ```
+  - if you have good design, and you can easily pass `Clock` as a dependency and test your time dependent code - go for it!
+- Update design to pass `Clock` as a dependency (could be challenging in legacy code).
+- Simulating time flow during scheduled taks. E.g. in Spring Boot tests we can't alter provided fixed `Clock` bean.
+- Using [Mockito](https://site.mockito.org/) - e.g. mocking Instant.now() not working outside of the test scope.
+- Inconsistent time across application under test.
 
 
 ## Requirements
@@ -157,7 +159,7 @@ final class Time_Scenarios {
 TestTime.testInstance().registerObserver(clock->System.out.println(clock.instant().toString()));
 ```
 
-#### Ensure only `timeflow` library is used in production code
+### Ensure only `timeflow` library is used in production code
 
 - Add dependency for [ArchUnit](https://www.archunit.org/)
 - Detect usage of `TestTime`, `Clock`, and `now()` method from `Instant`, `LocalDateTime`, `LocalDate`, `LocalTime` in production code by writing tests:
